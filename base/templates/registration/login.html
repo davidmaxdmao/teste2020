@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block conteudo %}
+<br>
+<br>
+<div class="row">
+    <div class="col-4 m-auto">
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email">Email address:</label>
+                {% render_field form.username class='form-control'%}
+            </div>
+            <div class="form-group">
+                <label for="pwd">Password:</label>
+                {% render_field form.password class='form-control' %}
+            </div>
+            <button type="submit" class="btn btn-primary">Sign in</button>
+            <a href="{% url 'register' %}"><button type="button" class="btn btn-primary">Sign up</button></a>
+        </form>
+    </div>
+</div>
+{% endblock %}
