@@ -6,6 +6,8 @@ from .views import cadastro
 from .views import index
 from .views import reset_senha
 from .views import reset_confirm_senha
+from .views import reset_done
+from .views import password_change_done
 
 
 urlpatterns = [
@@ -15,4 +17,6 @@ urlpatterns = [
     path('reset-senha/', reset_senha, name='PasswordReset'),
     path('reset/<uidb64>/<token>/', reset_confirm_senha, name='reset_confirm_senha'),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('reste-done/', reset_done, name='password_reset_done'),
+    path('change-done/', password_change_done, name='password_change_done'),
 ]

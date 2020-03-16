@@ -4,27 +4,23 @@
 {% block conteudo %}
 <br>
 <br>
-<div class="row">
-    <div class="col-4 m-auto">
+<div class="jumbotron">
+    <div class="col-6 m-auto">
         <form method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="email">Email address:</label>
-                {% render_field form.email class='form-control'%}
+                {% render_field form.email class='form-control' placeholder='Email'%}
             </div>
             <div class="form-group">
-                <label for="pwd">Nome:</label>
-                {% render_field form.username class='form-control' %}
+                {% render_field form.username class='form-control' placeholder='Nome'%}
             </div>
             <div class="form-group">
-                <label for="pwd">Password:</label>
-                {% render_field form.password1 class='form-control' %}
+                {% render_field form.password1 class='form-control' placeholder='Senha'%}
             </div>
             <div class="form-group">
-                <label for="pwd">Confirm password:</label>
-                {% render_field form.password2 class='form-control' %}
+                {% render_field form.password2 class='form-control' placeholder='Confirmar senha' %}
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
         </form>
     </div>
 </div>

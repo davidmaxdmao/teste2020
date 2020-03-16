@@ -4,21 +4,35 @@
 {% block conteudo %}
 <br>
 <br>
-<div class="row">
-    <div class="col-4 m-auto">
+<div class="jumbotron">
+    <div class="col-6 m-auto">
         <form method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="email">Email address:</label>
-                {% render_field form.username class='form-control'%}
+            <div class="form-group{% if field.errors %} has-error{% endif %}">
+                {% render_field form.username class='form-control' placeholder='Email'%}
+                {% for error in field.errors %}
+                <span class="help-block">{{ error }}</span>
+                {% endfor %}
             </div>
-            <div class="form-group">
-                <label for="pwd">Password:</label>
-                {% render_field form.password class='form-control' %}
+            <div class="form-group{% if field.errors %} has-error{% endif %}">
+                {% render_field form.password class='form-control' placeholder='Senha'%}
+                {% for error in field.errors %}
+                <span class="help-block">{{ error }}</span>
+                {% endfor %}
             </div>
-            <button type="submit" class="btn btn-primary">Sign in</button>
-            <a href="{% url 'register' %}"><button type="button" class="btn btn-primary">Sign up</button></a>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+            <a href="{% url 'register' %}"><button type="button" class="btn btn-primary">Cadastrar-se</button></a>
+            <a href="{% url 'PasswordReset'%}" style="margin-left: 8px;">Esqueceu a senha?</a>
         </form>
     </div>
+    <div style="margin-top: 30px;">
+        <h3>{{ message1 }}</h3>
+        <br>
+        <h3>{{ message2 }}</h3>
+
+    </div>
 </div>
+{% block resetDone %}
+{%endblock%}
+
 {% endblock %}
