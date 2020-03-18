@@ -5,9 +5,10 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 
 from .forms import LoginForm
+from .forms import UserForm
 from .models import User
 
-
+@login_required
 def index_view(request):
     return render(request, 'base/index.html', {})
 
@@ -26,9 +27,24 @@ def login_view(request):
         form = LoginForm()
         return render(request, 'registration/login.html', {'form':form})
 
+
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+
+def register_view(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    elif request.method == 'GET':
+        form = UserForm()
+        return render(request, 'registration/register.html', {'form': form})
+
+
+
 
 
 

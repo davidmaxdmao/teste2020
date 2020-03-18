@@ -4,12 +4,14 @@ from django import forms
 from .models import User
 
 
-class UserCreationFormCustom(UserCreationForm):
+class UserForm(UserCreationForm):
     class Meta:
         model = User
         fields = [
             'username',
-            'password',
+            'password1',
+            'password2',
+            'email',
         ]
 
 class LoginForm(forms.ModelForm):
