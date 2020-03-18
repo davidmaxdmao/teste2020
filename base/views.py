@@ -8,6 +8,7 @@ from .forms import LoginForm
 from .forms import UserForm
 from .models import User
 
+
 @login_required
 def index_view(request):
     return render(request, 'base/index.html', {})
@@ -42,6 +43,14 @@ def register_view(request):
     elif request.method == 'GET':
         form = UserForm()
         return render(request, 'registration/register.html', {'form': form})
+
+
+def password_reset_view(request):
+    if request.method == 'POST':
+        pass
+    elif request.method == 'GET':
+        form = UserForm()
+        return render (request, 'registration/custom_password_reset_form.html', {'form': form})
 
 
 
