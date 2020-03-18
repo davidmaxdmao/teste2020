@@ -7,7 +7,8 @@ from .views import index
 from .views import reset_senha
 from .views import reset_confirm_senha
 from .views import reset_done
-from .views import password_change_done
+from .views import custom_password_change_done
+from .views import login
 
 
 urlpatterns = [
@@ -18,5 +19,5 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', reset_confirm_senha, name='reset_confirm_senha'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('reste-done/', reset_done, name='password_reset_done'),
-    path('change-done/', password_change_done, name='password_change_done'),
+    path('change-done/', custom_password_change_done, name='custom_password_change_done'),
 ]
