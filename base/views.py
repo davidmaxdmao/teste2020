@@ -1,3 +1,4 @@
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView
@@ -5,9 +6,12 @@ from django.views.generic import TemplateView
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth.views import LoginView
+from django.contrib import messages
 
 from .forms import UserCreationFormCustom
 from .models import User
+
+
 
 
 class CustomLoginView(LoginView):
@@ -47,7 +51,17 @@ class CustomResetPassordView(PasswordResetView):
         self.request.session['recuperar_senha'] = True
         return context
 
+    def form_valid(self, form):
+        messages.success(self.request, 'Uma mensagem de redefinição de senha foi enviada para o seu email')
+        return super().form_valid(form)
+
 reset_senha = CustomResetPassordView.as_view()
+
+
+def reset_password(request):
+    form = UserCreationFormCustom()
+    context = {'form':form}
+    return render(request, 'registration/custom_password_reset_form.html', context)
 
 
 

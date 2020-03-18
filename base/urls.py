@@ -9,6 +9,7 @@ from .views import reset_confirm_senha
 from .views import reset_done
 from .views import custom_password_change_done
 from .views import login
+from .views import reset_password
 
 
 urlpatterns = [
@@ -20,4 +21,5 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('reste-done/', reset_done, name='password_reset_done'),
     path('change-done/', custom_password_change_done, name='custom_password_change_done'),
+    path('resete-password', reset_password, name='resete_password'),
 ]
