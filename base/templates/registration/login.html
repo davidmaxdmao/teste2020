@@ -15,31 +15,18 @@
                 {% endfor %}
             </div>
             <div class="form-group{% if field.errors %} has-error{% endif %}">
-                {% render_field form.password class='form-control' placeholder='Senha'%}
+                {% render_field form.password class='form-control' placeholder='Senha' type='password'%}
                 {% for error in field.errors %}
                 <span class="help-block">{{ error }}</span>
                 {% endfor %}
             </div>
             <button type="submit" class="btn btn-primary">Entrar</button>
             <a href="{% url 'register' %}"><button type="button" class="btn btn-primary">Cadastrar-se</button></a>
-            <a href="{% url 'PasswordReset'%}" style="margin-left: 8px;">Esqueceu a senha?</a>
+            <a href="{% url 'reset_password' %}" style="margin-left: 8px;">Esqueceu a senha?</a>
         </form>
 
         <div style="margin-top: 50px;">
-            {% if request.session.recuperar_senha %}
-            <h5>Enviamos-lhe instruções por e-mail para definir sua senha,
-                se houver uma conta com o e-mail digitado. Você deve recebê-las em breve.
-            </h5>
-            <h5>
-                Se você não receber um e-mail, verifique se inseriu o endereço com
-                o qual se registrou e verifique sua pasta de spam.
-            </h5>
-            {% endif %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+            
         </div>
     </div>
 </div>

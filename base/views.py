@@ -1,94 +1,109 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView
-from django.views.generic import TemplateView
-from django.contrib.auth.views import PasswordResetView
-from django.contrib.auth.views import PasswordResetConfirmView
-from django.contrib.auth.views import LoginView
-from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.tokens import default_token_generator
+#from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.forms import PasswordResetForm as CustomPasswordForm
+from django.contrib.auth import logout
+from django.core.mail import send_mail
 
-from .forms import UserCreationFormCustom
+from django.conf import settings
+from .forms import LoginForm
+from .forms import UserForm
+from .forms import CustomSetPasswordForm
 from .models import User
 
 
+@login_required
+def index_view(request):
+    return render(request, 'base/index.html', {})
 
 
-class CustomLoginView(LoginView):
-    def form_valid(self, form):
-        self.request.session['recuperar_senha'] = False
-        return super().form_valid(form)
-    
-login = CustomLoginView.as_view()
-
-class CadastroView(CreateView):
-    model = User
-    form_class = UserCreationFormCustom
-    success_url = reverse_lazy('index')
-    template_name = 'registration/register.html'
-
-cadastro = CadastroView.as_view()
-
-
-class IndexView(TemplateView):
-    template_name = 'base/index.html'
-
-index = login_required(IndexView.as_view())
+def login_view(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('index')
+    elif request.method == "GET":
+        form = LoginForm()
+        return render(request, 'registration/login.html', {'form':form})
 
 
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
-class CustomResetPassordView(PasswordResetView):
+
+def register_view(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    elif request.method == 'GET':
+        form = UserForm()
+        return render(
+            request,
+            'registration/register.html',
+            {'form': form}
+        )
+
+
+def password_reset_view(request):
     email_template_name = 'registration/custom_password_reset_email.html'
     subject_template_name = 'registration/custom_password_reset_subject.txt'
-    template_name = 'registration/custom_password_reset_form.html'
-    success_url = reverse_lazy('login')
+    token_generator = default_token_generator
 
-    # Mostra na sessão se o usuario iniciou o processo de recuperar senha,
-    # deste modo na pagina de login pode ser exibida uma mensagem de orientação
-    # de acordo com o valor guardado na sessão
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        self.request.session['recuperar_senha'] = True
-        return context
-
-    def form_valid(self, form):
-        messages.success(self.request, 'Uma mensagem de redefinição de senha foi enviada para o seu email')
-        return super().form_valid(form)
-
-reset_senha = CustomResetPassordView.as_view()
-
-
-def reset_password(request):
-    form = UserCreationFormCustom()
-    context = {'form':form}
-    return render(request, 'registration/custom_password_reset_form.html', context)
-
+    if request.method == 'POST':
+        form = CustomPasswordForm(request.POST)
+        if form.is_valid():
+            opts = {
+                'use_https': request.is_secure(),
+                'token_generator': token_generator,
+                'email_template_name': email_template_name,
+                'subject_template_name': subject_template_name,
+                'request': request,
+            }
+            form.save(**opts)
+        return redirect('login')
+    elif request.method == 'GET':
+        form = CustomPasswordForm()
+        return render(
+            request,
+            'registration/custom_password_reset_form.html',
+            {'form': form}
+        )
 
 
-class CustomPasswordResetDoneView(TemplateView):
-    template_name = 'registration/custom_password_reset_done.html'
+def reset_confirm_senha(request, pk):
+    user = User.objects.get(id=pk)
+    if request.method == "POST":
+        form = CustomSetPasswordForm(request.POST)
+        if form.is_valid():
+            form.new_password1 = request.POST['new_password1']
+            form.new_password2 = request.POST['new_password2']
+            if form.compara_senhas():
+                print('senha iguais')
+                user.set_password(form.new_password1)
+                user.save()
+                return redirect('login')
+    elif request.method == "GET":
+        form = CustomSetPasswordForm()
+        return render(
+            request,
+            'registration/custom_password_reset_confirm.html',
+            {'form': form}
+       )
 
-reset_done = CustomPasswordResetDoneView.as_view()
 
 
-class CustomPasswordConfirmView(PasswordResetConfirmView):
-    template_name = 'registration/custom_password_reset_confirm.html'
-    success_url = reverse_lazy('custom_password_change_done')
-
-reset_confirm_senha = CustomPasswordConfirmView.as_view()
 
 
-class CustomPasswordChangeDoneView(TemplateView):
-    template_name = 'registration/custom_password_change_done.html'
-
-    # Depois que o usuário recuperou a senha, seta o valor de
-    # 'reuperar_senha', a sessão, para False, para assim a mensagem
-    # de orientação n ser mais exibida na página de login
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        self.request.session['recuperar_senha'] = False
-        return context
-
-custom_password_change_done = CustomPasswordChangeDoneView.as_view()
 
 
