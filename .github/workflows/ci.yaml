@@ -38,7 +38,7 @@ jobs:
       - name: Check Python version # checking the python version to see if 3.x is installed.
         run: python --version
       - name: Criar arqui .env
-        run: echo"EMAIL_HOST_PASSWORD=teste" > .env
+        run: echo "EMAIL_HOST_PASSWORD=teste" > .env
       - name: Install requirements # install application requirements
         run: pip install -r requirements.txt
       - name: Run Migrations # run migrations to create table in side car db container
