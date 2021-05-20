@@ -14,7 +14,7 @@ on:
     branches:
       - master
       - develop
-      - test/ci
+      - tests/ci
 
 
 # three job definition
@@ -37,11 +37,8 @@ jobs:
           python-version: '3.x' # if you want multiple python version run just use matrix strategy in job config. See the documentation of GitHub Actions
       - name: Check Python version # checking the python version to see if 3.x is installed.
         run: python --version
-<<<<<<< HEAD
-=======
-      - name: Criar aqruivo .env
-        run: echo "EMAIL_HOST_PASSWORD=teste" > .env
->>>>>>> tests/ci
+      - name: Criar arqui .env
+        run: echo"EMAIL_HOST_PASSWORD=teste" > .env
       - name: Install requirements # install application requirements
         run: pip install -r requirements.txt
       - name: Run Migrations # run migrations to create table in side car db container
