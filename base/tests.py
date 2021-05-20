@@ -4,4 +4,4 @@ from django.test import TestCase
 class TesteCi(TestCase):
 
     def test_sucesso(self):
-        self.assertEqual(2, 2)
+        self.assertEqual(1, 1)
