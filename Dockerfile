@@ -1,5 +1,5 @@
 # Imagem oficial que servirá de base
-FROM ubuntu:18.04
+FROM python:3
 
 #VOLUME app
 # The enviroment variable ensures that the python output is set straight
@@ -9,12 +9,6 @@ ENV LANG C.UTF-8
 
 # Define o diretório /home/app como um working directory
 WORKDIR /app
-
-# Instala ferramentas necessarias
-RUN apt-get update
-RUN apt-get -y install python3
-RUN apt-get -y install python3-pip
-RUN apt-get -y install git
 
 # Copia o arquivo requirements do diretório atual para o diretório /home/app do container
 COPY ./requirements.txt ./
