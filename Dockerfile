@@ -10,7 +10,7 @@ ENV LANG C.UTF-8
 # Define o diretório /home/app como um working directory
 WORKDIR /app
 
-# Instala ferramentas necessárias
+# Instala ferramentas necessarias
 RUN apt-get update
 RUN apt-get -y install python3
 RUN apt-get -y install python3-pip
