@@ -1,0 +1,19 @@
+kind: pipeline
+type: docker
+name: default
+
+steps
+- name: testes
+  image: davidmaxdmao/django-login
+  commands:
+  - echo "EMAIL_HOST_PASSWORD=teste" > .env
+  - pip install -r requirements.txt
+  - python manage.py migrate
+  - python manage.py test
+  when:
+    branch:
+    - ci/cd-drone
+
+  trugger:
+    event:
+    - push
