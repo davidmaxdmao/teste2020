@@ -5,4 +5,4 @@ class TesteCi(TestCase):
 
     def test_sucesso(self):
 
-        self.assertEqual(1, 1)
+        self.assertEqual(1, 2)
